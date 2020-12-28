@@ -1,0 +1,78 @@
+//producer consumer problem
+
+/*
+Group members
+    1) Muhammad Yamin (021-19-0029)
+    2) Muhammad Fahad Shahzad (051-19-0003)
+    3) Muhammad Akram (051-19-0033)
+    4) Irfan Ullah (051-19-0008)
+    5) Wasid Khan (021-19-0022 )
+*/
+#include<stdio.h>
+#include<stdlib.h>
+
+int mutex=1,full=0,empty=6,x=0;
+
+int main()
+{
+    int n;
+    void producer();
+    void consumer();
+    int wait(int);
+    int signal(int);
+    printf("\n1.Producer\n2.Consumer\n3.Exit");
+    while(1)
+    {
+        printf("\nEnter your choice:");
+        scanf("%d",&n);
+        switch(n)
+        {
+            case 1: if((mutex==1)&&(empty!=0))
+                        producer();
+                    else
+                        printf("Buffer is full!!\n");
+                    break;
+            case 2: if((mutex==1)&&(full!=0))
+                        consumer();
+                    else
+                        printf("Buffer is empty!!\n");
+                    break;
+            case 3:
+                    exit(0);
+                    break;
+        }
+    }
+
+    return 0;
+}
+
+int wait(int s)
+{
+    return (--s);
+}
+
+int signal(int s)
+{
+    return(++s);
+}
+
+void producer()
+{
+    mutex=wait(mutex);
+    empty=wait(empty);
+    x++;
+    printf("\nProducer produces the item %d",x);
+    mutex=signal(mutex);
+    full=signal(full);
+}
+
+void consumer()
+{
+    mutex=wait(mutex);
+    full=wait(full);
+    printf("\nConsumer consumes item %d",x);
+    x--;
+    mutex=signal(mutex);
+    empty=signal(empty);
+}
+
